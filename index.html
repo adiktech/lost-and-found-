@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Lost & Found — Aktobe BIL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-main: #0a0d14;
+    --card-bg: rgba(18, 22, 33, 0.82);
+    --card-border: rgba(212, 175, 55, 0.22);
+    --card-border-hover: rgba(226, 194, 117, 0.55);
+    --accent-gold: #e2c275;
+    --accent-gold-bright: #d4af37;
+    --accent-glow: rgba(212, 175, 55, 0.2);
+    --btn-primary: linear-gradient(135deg, #d4af37 0%, #aa820a 100%);
+    --btn-primary-hover: linear-gradient(135deg, #e2c275 0%, #c49915 100%);
+    --text-primary: #f8fafc;
+    --text-muted: #94a3b8;
+    --danger: #f87171;
+    --danger-light: rgba(239, 68, 68, 0.15);
+    --success: #34d399;
+    --success-light: rgba(16, 185, 129, 0.15);
+    --radius-lg: 20px;
+    --radius-md: 12px;
+    --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-main);
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Фоновый логотип (Watermark) по центру экрана */
+  .bg-watermark {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(85vw, 520px);
+    height: min(85vw, 520px);
+    background-image: url('images (3).jfif');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.08;
+    filter: drop-shadow(0 0 35px rgba(212, 175, 55, 0.3));
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  /* Золотисто-тёмные фоновые свечения */
+  .bg-glow-1 {
+    position: fixed;
+    top: -150px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 750px;
+    height: 450px;
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, rgba(18, 22, 33, 0.05) 60%, transparent 80%);
+    filter: blur(90px);
+    z-index: -2;
+    pointer-events: none;
+  }
+
+  /* ХЕДЕР С ЛОГОТИПОМ */
+  header {
+    background: rgba(10, 13, 20, 0.88);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--card-border);
+    padding: 24px 20px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo-box {
+    width: 86px;
+    height: 86px;
+    margin: 0 auto 12px;
+    border-radius: 50%;
+    border: 2px solid var(--accent-gold);
+    box-shadow: 0 0 25px var(--accent-glow);
+    background: #000000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 2px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .logo-box:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 35px rgba(212, 175, 55, 0.5);
+  }
+
+  .logo-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  .brand-badge {
+    display: inline-block;
+    padding: 4px 14px;
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    border-radius: 30px;
+    color: var(--accent-gold);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  header h1 {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--text-primary);
+  }
+
+  header p {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    font-weight: 500;
+  }
+
+  .container { max-width: 800px; margin: 0 auto; padding: 28px 16px 80px; }
+
+  /* Навигация */
+  nav {
+    display: flex;
+    gap: 6px;
+    background: rgba(18, 22, 33, 0.88);
+    backdrop-filter: blur(20px);
+    padding: 6px;
+    border-radius: 18px;
+    border: 1px solid var(--card-border);
+    margin-bottom: 28px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    overflow-x: auto;
+  }
+
+  nav button {
+    flex: 1;
+    padding: 12px 10px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-weight: 700;
+    font-size: 13px;
+    border-radius: 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  nav button.active {
+    background: var(--btn-primary);
+    color: #000;
+    font-weight: 800;
+    box-shadow: 0 4px 18px rgba(212, 175, 55, 0.35);
+  }
+
+  .admin-only-tab { display: none; }
+
+  .tab { display: none; }
+  .tab.active { display: block; animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Стеклянные карточки с золотыми нотками */
+  .glass-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+    margin-bottom: 20px;
+  }
+
+  /* Поля формы */
+  .form-group { margin-bottom: 20px; }
+  .form-group label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; color: var(--text-primary); }
+  .form-group label .opt { font-weight: 500; font-size: 12px; color: var(--text-muted); }
+
+  input[type="text"], input[type="password"], input[type="file"], select, textarea {
+    width: 100%;
+    padding: 14px 18px;
+    background: rgba(10, 13, 20, 0.75);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: 14px;
+    outline: none;
+    transition: all 0.25s ease;
+    font-family: inherit;
+  }
+
+  select option {
+    background-color: #0a0d14;
+    color: #ffffff;
+  }
+
+  input[type="file"] { padding: 11px 14px; cursor: pointer; }
+
+  input[type="text"]:focus, input[type="password"]:focus, select:focus, textarea:focus {
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 15px var(--accent-glow);
+  }
+
+  .radio-group { display: flex; gap: 12px; }
+  .radio-group label {
+    flex: 1;
+    text-align: center;
+    padding: 14px;
+    background: rgba(10, 13, 20, 0.75);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: 700;
+    color: var(--text-muted);
+    transition: all 0.25s ease;
+  }
+
+  .radio-group input { display: none; }
+  .radio-group input:checked + span { color: var(--accent-gold); }
+  .radio-group label:has(input:checked) {
+    border-color: var(--accent-gold);
+    background: rgba(212, 175, 55, 0.12);
+    box-shadow: 0 0 15px var(--accent-glow);
+  }
+
+  .btn-submit {
+    width: 100%;
+    padding: 16px;
+    background: var(--btn-primary);
+    border: none;
+    border-radius: var(--radius-md);
+    color: #000000;
+    font-weight: 800;
+    font-size: 15px;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3);
+    transition: all 0.25s ease;
+    margin-top: 10px;
+  }
+  .btn-submit:hover { background: var(--btn-primary-hover); transform: translateY(-1px); box-shadow: 0 8px 25px rgba(212, 175, 55, 0.45); }
+
+  .action-buttons {
+    display: flex;
+    gap: 8px;
+  }
+
+  .btn-archive {
+    background: rgba(212, 175, 55, 0.12);
+    color: var(--accent-gold);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .btn-archive:hover { background: var(--accent-gold); color: #000; }
+
+  .btn-danger {
+    background: var(--danger-light);
+    color: var(--danger);
+    border: 1px solid rgba(248, 113, 113, 0.3);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .btn-danger:hover { background: var(--danger); color: #fff; }
+
+  /* Карточка объявлений */
+  .item-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin-bottom: 16px;
+    display: flex;
+    gap: 18px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    transition: all 0.25s ease;
+  }
+  .item-card:hover { transform: translateY(-2px); border-color: var(--card-border-hover); box-shadow: 0 12px 35px var(--accent-glow); }
+
+  .item-photo {
+    width: 90px; height: 90px; min-width: 90px;
+    border-radius: var(--radius-md);
+    background: rgba(10, 13, 20, 0.85);
+    border: 1px solid var(--card-border);
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; color: var(--text-muted); font-weight: 600;
+  }
+  .item-photo img { width: 100%; height: 100%; object-fit: cover; }
+
+  .item-content { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+  .item-title { font-size: 17px; font-weight: 800; color: var(--text-primary); }
+  .item-desc { font-size: 13.5px; color: var(--text-muted); margin-top: 6px; line-height: 1.5; white-space: pre-line; }
+  .item-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; flex-wrap: wrap; gap: 8px; }
+  
+  .badge-user {
+    background: rgba(212, 175, 55, 0.12);
+    color: var(--accent-gold);
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+  }
+
+  /* Таблицы */
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+  th, td { padding: 14px 16px; text-align: left; font-size: 14px; border-bottom: 1px solid var(--card-border); }
+  th { color: var(--accent-gold); text-transform: uppercase; font-size: 11px; letter-spacing: 1.2px; font-weight: 800; }
+  
+  .count-lost { color: var(--danger); font-weight: 800; }
+  .count-found { color: var(--success); font-weight: 800; }
+</style>
+</head>
+<body>
+
+<div class="bg-watermark"></div>
+<div class="bg-glow-1"></div>
+
+<header>
+  <div class="logo-box">
+    <img src="images (3).jfif" alt="БИЛ Логотип">
+  </div>
+  <div class="brand-badge">AKTOBE BIL</div>
+  <h1>Lost & Found</h1>
+  <p>Сервис поиска и учёта потерянных вещей</p>
+</header>
+
+<div class="container">
+
+  <nav>
+    <button class="active" onclick="switchTab('add', this)">+ Создать</button>
+    <button onclick="switchTab('lost', this)">Потерянные</button>
+    <button onclick="switchTab('found', this)">Найденные</button>
+    
+    <!-- Доступно только Админу -->
+    <button class="admin-only-tab" id="nav-archive-lost" onclick="switchTab('archive-lost', this)">Архив Потерянных</button>
+    <button class="admin-only-tab" id="nav-archive-found" onclick="switchTab('archive-found', this)">Архив Найденных</button>
+    <button class="admin-only-tab" id="nav-rating" onclick="switchTab('rating', this)">Рейтинг</button>
+
+    <button id="nav-admin" onclick="switchTab('admin', this)">🔒 Админ</button>
+  </nav>
+
+  <!-- Вкладка добавления -->
+  <div class="tab active" id="tab-add">
+    <div class="glass-card">
+      <h2 style="margin-bottom:20px; font-size:20px; font-weight:800; color:var(--accent-gold);">Новая запись</h2>
+      <form id="itemForm">
+        <div class="form-group">
+          <label>Тип события</label>
+          <div class="radio-group">
+            <label><input type="radio" name="type" value="lost" checked> <span>Потеряно</span></label>
+            <label><input type="radio" name="type" value="found"> <span>Найдено</span></label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Класс</label>
+          <select id="klassSelect" required onchange="loadStudents()">
+            <option value="">Выберите класс</option>
+            <option value="7A">7A</option><option value="7B">7B</option>
+            <option value="8A">8A</option><option value="8B">8B</option>
+            <option value="9A">9A</option><option value="9B">9B</option>
+            <option value="10A">10A</option><option value="10B">10B</option>
+            <option value="11A">11A</option><option value="11B">11B</option>
+            <option value="Tutors">Tutors (Абишки)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Ученик / Воспитатель</label>
+          <select id="studentSelect" required disabled>
+            <option value="">Сначала выберите класс</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Название предмета</label>
+          <input type="text" id="itemName" placeholder="Ключи, худи, пенал..." required>
+        </div>
+
+        <div class="form-group">
+          <label>Описание</label>
+          <textarea id="itemDesc" rows="3" placeholder="Где оставили или нашли, внешние приметы..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Фотография предмета <span class="opt">(необязательно)</span></label>
+          <input type="file" id="itemPhoto" accept="image/*">
+        </div>
+
+        <button type="submit" class="btn-submit">Опубликовать</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Активные Потерянные -->
+  <div class="tab" id="tab-lost">
+    <div id="lostList"></div>
+  </div>
+
+  <!-- Активные Найденные -->
+  <div class="tab" id="tab-found">
+    <div id="foundList"></div>
+  </div>
+
+  <!-- Архив Потерянных (Только Админ) -->
+  <div class="tab" id="tab-archive-lost">
+    <div class="glass-card" style="margin-bottom:16px;">
+      <h2 style="font-size:18px; font-weight:800; color:var(--accent-gold);">📦 Архив потерянных вещей</h2>
+    </div>
+    <div id="archiveLostList"></div>
+  </div>
+
+  <!-- Архив Найденных (Только Админ) -->
+  <div class="tab" id="tab-archive-found">
+    <div class="glass-card" style="margin-bottom:16px;">
+      <h2 style="font-size:18px; font-weight:800; color:var(--accent-gold);">📦 Архив найденных вещей</h2>
+    </div>
+    <div id="archiveFoundList"></div>
+  </div>
+
+  <!-- Рейтинг (Только Админ) -->
+  <div class="tab" id="tab-rating">
+    <div class="glass-card">
+      <h2 style="font-size:18px; font-weight:800; margin-bottom:16px; color:var(--accent-gold);">📊 Статистика по классам</h2>
+      <table>
+        <thead>
+          <tr><th>№</th><th>Класс</th><th>Потеряно</th><th>Найдено</th></tr>
+        </thead>
+        <tbody id="classRatingBody"></tbody>
+      </table>
+    </div>
+
+    <div class="glass-card">
+      <h2 style="font-size:18px; font-weight:800; margin-bottom:16px; color:var(--accent-gold);">👤 Статистика по ученикам</h2>
+      <table>
+        <thead>
+          <tr><th>№</th><th>Имя</th><th>Потеряно</th><th>Найдено</th></tr>
+        </thead>
+        <tbody id="studentRatingBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Авторизация Админа -->
+  <div class="tab" id="tab-admin">
+    <div class="glass-card" id="adminLoginBox">
+      <h2 style="margin-bottom:16px; font-size:20px; font-weight:800; color:var(--accent-gold);">Вход в Админ-панель</h2>
+      <div class="form-group">
+        <label>Введите пароль администратора</label>
+        <input type="password" id="adminPassInput" placeholder="Пароль">
+      </div>
+      <button class="btn-submit" onclick="loginAdmin()">Войти</button>
+    </div>
+
+    <div class="glass-card" id="adminDashboardBox" style="display:none; text-align:center;">
+      <h2 style="font-size:20px; font-weight:800; color:var(--success); margin-bottom:10px;">✓ Режим Администратора активен</h2>
+      <p style="color:var(--text-muted); font-size:14px; margin-bottom:20px;">Вам доступны: Архивирование, Безвозвратное удаление, Архив объявлений и Полная статистика.</p>
+      <button class="btn-danger" style="padding:12px 24px; font-size:14px;" onclick="logoutAdmin()">Выйти из системы</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const studentsData = {
+  '7A': ['Алихан С.', 'Арман М.'],
+  '7B': ['Данияр Т.', 'Ерасыл Б.'],
+  '8A': ['Мирас Ж.', 'Нурсултан К.'],
+  '8B': ['Санжар М.', 'Темирлан Р.'],
+  '9A': ['Адиль А.', 'Батырхан В.'],
+  '9B': ['Диас К.', 'Ерназар М.'],
+  '10A': ['Талғатұлы Әділет', 'Алдияр Н.'],
+  '10B': ['Ануар С.', 'Бейбарыс Т.'],
+  '11A': ['Абай К.', 'Биржан О.'],
+  '11B': ['Ильяс Т.', 'Кайрат А.'],
+  'Tutors': ['Алмат аби', 'Нұрхан ағай', 'Хасан аби', 'Дінислам аби']
+};
+
+let items = [];
+let isAdmin = false;
+
+function loginAdmin() {
+  const p = document.getElementById('adminPassInput').value;
+  if (p === '20282028') {
+    isAdmin = true;
+    document.getElementById('adminLoginBox').style.display = 'none';
+    document.getElementById('adminDashboardBox').style.display = 'block';
+    document.querySelectorAll('.admin-only-tab').forEach(el => el.style.display = 'block');
+    document.getElementById('nav-admin').innerText = '⚙️ Админка';
+    alert('Успешный вход в панель администратора!');
+    renderAll();
+  } else {
+    alert('Неверный пароль!');
+  }
+}
+
+function logoutAdmin() {
+  isAdmin = false;
+  document.getElementById('adminPassInput').value = '';
+  document.getElementById('adminLoginBox').style.display = 'block';
+  document.getElementById('adminDashboardBox').style.display = 'none';
+  document.querySelectorAll('.admin-only-tab').forEach(el => el.style.display = 'none');
+  document.getElementById('nav-admin').innerText = '🔒 Админ';
+  switchTab('add', document.querySelector('nav button'));
+}
+
+function loadStudents() {
+  const k = document.getElementById('klassSelect').value;
+  const s = document.getElementById('studentSelect');
+  s.innerHTML = '';
+  if (k && studentsData[k]) {
+    s.disabled = false;
+    studentsData[k].forEach(name => {
+      s.innerHTML += `<option value="${name}">${name}</option>`;
+    });
+  } else {
+    s.disabled = true;
+    s.innerHTML = '<option value="">Сначала выберите класс</option>';
+  }
+}
+
+function switchTab(tabId, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tabId).classList.add('active');
+  if(btn) btn.classList.add('active');
+  renderAll();
+}
+
+document.getElementById('itemForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const type = document.querySelector('input[name="type"]:checked').value;
+  const klass = document.getElementById('klassSelect').value;
+  const student = document.getElementById('studentSelect').value;
+  const name = document.getElementById('itemName').value;
+  const desc = document.getElementById('itemDesc').value;
+  const photoInput = document.getElementById('itemPhoto');
+
+  const saveAndReset = (photoData) => {
+    items.push({ id: Date.now(), type, klass, student, name, desc, photo: photoData, archived: false });
+    e.target.reset();
+    document.getElementById('studentSelect').disabled = true;
+    alert('Запись успешно добавлена!');
+    renderAll();
+  };
+
+  if (photoInput.files && photoInput.files[0]) {
+    const reader = new FileReader();
+    reader.onload = (event) => saveAndReset(event.target.result);
+    reader.readAsDataURL(photoInput.files[0]);
+  } else {
+    saveAndReset(null);
+  }
+});
+
+function archiveItem(id) {
+  const item = items.find(i => i.id === id);
+  if (item) {
+    item.archived = true;
+    renderAll();
+  }
+}
+
+function deletePermanently(id) {
+  if (confirm('Вы уверены, что хотите навсегда удалить эту запись?')) {
+    items = items.filter(i => i.id !== id);
+    renderAll();
+  }
+}
+
+function renderAll() {
+  const lostL = document.getElementById('lostList');
+  const foundL = document.getElementById('foundList');
+  const archLostL = document.getElementById('archiveLostList');
+  const archFoundL = document.getElementById('archiveFoundList');
+
+  lostL.innerHTML = ''; foundL.innerHTML = '';
+  archLostL.innerHTML = ''; archFoundL.innerHTML = '';
+
+  const losts = items.filter(i => i.type === 'lost' && !i.archived);
+  const founds = items.filter(i => i.type === 'found' && !i.archived);
+  const archLosts = items.filter(i => i.type === 'lost' && i.archived);
+  const archFounds = items.filter(i => i.type === 'found' && i.archived);
+
+  lostL.innerHTML = losts.length === 0 ? '<p style="text-align:center; color:var(--text-muted); padding:40px; font-weight:500;">Нет потерянных вещей</p>' : losts.map(renderCard).join('');
+  foundL.innerHTML = founds.length === 0 ? '<p style="text-align:center; color:var(--text-muted); padding:40px; font-weight:500;">Нет найденных вещей</p>' : founds.map(renderCard).join('');
+  
+  if (isAdmin) {
+    archLostL.innerHTML = archLosts.length === 0 ? '<p style="text-align:center; color:var(--text-muted); padding:40px; font-weight:500;">Архив пуст</p>' : archLosts.map(renderCard).join('');
+    archFoundL.innerHTML = archFounds.length === 0 ? '<p style="text-align:center; color:var(--text-muted); padding:40px; font-weight:500;">Архив пуст</p>' : archFounds.map(renderCard).join('');
+  }
+
+  renderStats();
+}
+
+function renderCard(item) {
+  const photoHtml = item.photo 
+    ? `<div class="item-photo"><img src="${item.photo}" alt="${item.name}"></div>`
+    : `<div class="item-photo">Без фото</div>`;
+
+  let actionBtns = '';
+  if (isAdmin) {
+    actionBtns = `
+      <div class="action-buttons">
+        ${!item.archived ? `<button class="btn-archive" onclick="archiveItem(${item.id})">В архив</button>` : ''}
+        <button class="btn-danger" onclick="deletePermanently(${item.id})">Удалить</button>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="item-card">
+      ${photoHtml}
+      <div class="item-content">
+        <div>
+          <div class="item-title">${item.name}</div>
+          <div class="item-desc">${item.desc}</div>
+        </div>
+        <div class="item-footer">
+          <span class="badge-user">${item.student} (${item.klass})</span>
+          ${actionBtns}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderStats() {
+  const classMap = {};
+  const studentMap = {};
+
+  items.forEach(item => {
+    if (!classMap[item.klass]) classMap[item.klass] = { lost: 0, found: 0 };
+    if (item.type === 'lost') classMap[item.klass].lost++;
+    if (item.type === 'found') classMap[item.klass].found++;
+
+    const userKey = `${item.student} (${item.klass})`;
+    if (!studentMap[userKey]) studentMap[userKey] = { lost: 0, found: 0 };
+    if (item.type === 'lost') studentMap[userKey].lost++;
+    if (item.type === 'found') studentMap[userKey].found++;
+  });
+
+  const cRows = Object.entries(classMap).sort((a,b) => b[1].lost - a[1].lost);
+  document.getElementById('classRatingBody').innerHTML = cRows.length ? cRows.map((c, i) => `
+    <tr>
+      <td>${i+1}</td>
+      <td><b>${c[0]}</b></td>
+      <td class="count-lost">${c[1].lost}</td>
+      <td class="count-found">${c[1].found}</td>
+    </tr>
+  `).join('') : '<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Данных нет</td></tr>';
+
+  const sRows = Object.entries(studentMap).sort((a,b) => b[1].lost - a[1].lost);
+  document.getElementById('studentRatingBody').innerHTML = sRows.length ? sRows.map((s, i) => `
+    <tr>
+      <td>${i+1}</td>
+      <td><b>${s[0]}</b></td>
+      <td class="count-lost">${s[1].lost}</td>
+      <td class="count-found">${s[1].found}</td>
+    </tr>
+  `).join('') : '<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Данных нет</td></tr>';
+}
+</script>
+</body>
+</html>
